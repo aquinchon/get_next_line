@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_cpybuffer(char *buffer, char *buf_read)
 {
@@ -99,16 +99,16 @@ char	*ft_read(int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[FD_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!buffer || (buffer && !ft_strchr(buffer, '\n')))
-		buffer = ft_read(fd, buffer);
-	if (!buffer)
+	if (!buffer[fd] || (buffer[fd] && !ft_strchr(buffer[fd], '\n')))
+		buffer[fd] = ft_read(fd, buffer[fd]);
+	if (!buffer[fd])
 		return (NULL);
-	line = ft_cutline(buffer);
-	buffer = ft_resize_buffer(buffer);
+	line = ft_cutline(buffer[fd]);
+	buffer[fd] = ft_resize_buffer(buffer[fd]);
 	return (line);
 }
